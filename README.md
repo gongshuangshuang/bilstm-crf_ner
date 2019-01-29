@@ -7,7 +7,7 @@ bilstm+crf algorithm
  
 运行代码：存放在code文件夹中
 
-1.数据处理：
+1.  数据处理：
 
   data_preprocess.py  对数据进行实体标签化及one-hot编码等处理
   
