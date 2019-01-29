@@ -4,7 +4,7 @@ import numpy as np
 
 # 合并组织名和人名
 def person_organ():
-    with open('renmin.txt', 'r', encoding='utf-8') as inp, open('renmin1.txt', 'w', encoding='utf-8') as outp:
+    with open('../data/renmin.txt', 'r', encoding='utf-8') as inp, open('../data/renmin1.txt', 'w', encoding='utf-8') as outp:
         for line in inp.readlines():
             line = line.split('  ')
             i = 1
@@ -32,7 +32,7 @@ def person_organ():
 
 # 处理成序列标签格式
 def tag_set():
-    with open('renmin1.txt', 'r', encoding='utf-8') as inp, open('renmin2.txt', 'w', encoding='utf-8') as outp:
+    with open('../data/renmin1.txt', 'r', encoding='utf-8') as inp, open('../data/renmin2.txt', 'w', encoding='utf-8') as outp:
         for line in inp.readlines():
             line = line.split(' ')
             i = 0
@@ -56,20 +56,20 @@ def tag_set():
 
 # 去除标点符号
 def sentence2split():
-    with open('renmin2.txt', 'r', encoding='utf-8') as inp, open('renmin3.txt', 'w', encoding='utf-8') as outp:
+    with open('../data/renmin2.txt', 'r', encoding='utf-8') as inp, open('../data/renmin3.txt', 'w', encoding='utf-8') as outp:
         texts = inp.read()
         sentences = re.split('[，。！？、‘’“”:]/[O]', texts)
         for sentence in sentences:
             if sentence != " ":
                 outp.write(sentence.strip() + '\n')
 
-# 数据预处理
+# 数据预处理,one-hot编码
 def data2pkl():
     datas = list()
     labels = list()
     tags = set()
     tags.add('')
-    with open('renmin3.txt', 'r', encoding='utf-8') as fin:
+    with open('../data/renmin3.txt', 'r', encoding='utf-8') as fin:
         for line in fin.readlines():
             line = line.split()
             linedata = []
@@ -126,7 +126,7 @@ def data2pkl():
 
     import pickle
     import os
-    with open('renmindata.pkl', 'wb') as outp:
+    with open('../data/renmindata.pkl', 'wb') as outp:
         pickle.dump(word2id, outp)
         pickle.dump(id2word, outp)
         pickle.dump(tag2id, outp)
@@ -143,5 +143,3 @@ person_organ()
 tag_set()
 sentence2split()
 data2pkl()
-
-
