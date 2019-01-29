@@ -20,8 +20,6 @@ class Model:
 
     def _build_net(self):
         word_embeddings = tf.get_variable("word_embeddings", [self.embedding_size, self.embedding_dim])
-        if self.pretrained:
-            embeddings_init = word_embeddings.assign(self.embedding_pretrained)
         input_embedded = tf.nn.embedding_lookup(word_embeddings, self.input_data)
         input_embedded = tf.nn.dropout(input_embedded, self.dropout_keep)
         lstm_fw_cell = tf.nn.rnn_cell.LSTMCell(self.embedding_dim, forget_bias=1.0, state_is_tuple=True)
@@ -45,8 +43,7 @@ class Model:
         # Linear-CRF.
         log_likelihood, self.transition_params = tf.contrib.crf.crf_log_likelihood(bilstm_out, self.labels,
                                                                                     tf.tile(np.array([self.sen_len]),
-                                                                                            np.array(
-                                                                                                [self.batch_size])))
+                                                                                            np.array([self.batch_size])))
 
         loss = tf.reduce_mean(-log_likelihood)
 
@@ -58,8 +55,3 @@ class Model:
         # Training ops.
         optimizer = tf.train.AdamOptimizer(self.lr)
         self.train_op = optimizer.minimize(loss)
-
-
-
-
-
