@@ -5,8 +5,8 @@ import numpy as np
 import tensorflow as tf
 from Batch import BatchGenerator
 from bilstm_crf import Model
-from utils import *
-with open('renmindata.pkl', 'rb') as inp:
+from utils import train
+with open('../data/renmindata.pkl', 'rb') as inp:
 	word2id = pickle.load(inp)
 	id2word = pickle.load(inp)
 	tag2id = pickle.load(inp)
@@ -26,7 +26,7 @@ data_valid = BatchGenerator(x_valid, y_valid, shuffle=False)
 data_test = BatchGenerator(x_test, y_test, shuffle=False)
 print('Finished creating the data generator.')
 
-epochs = 31
+epochs = 50
 batch_size = 32
 
 config = {}
@@ -38,27 +38,9 @@ config["embedding_size"] = len(word2id)+1
 config["tag_size"] = len(tag2id)
 config["pretrained"] = False
 embedding_pre = []
-if len(sys.argv) == 2 and sys.argv[1] == "pretrained":
-    print("use pretrained embedding")
-    config["pretrained"] = True
-    word2vec = {}
-    with codecs.open('vec.txt', 'r', 'utf-8') as input_data:
-        for line in input_data.readlines():
-            word2vec[line.split()[0]] = map(eval, line.split()[1:])
-    unknow_pre = []
-    unknow_pre.extend([1] * 100)
-    embedding_pre.append(unknow_pre)
-    for word in word2id:
-        if word2vec.has_key(word):
-            embedding_pre.append(word2vec[word])
-        else:
-            embedding_pre.append(unknow_pre)
-
-    embedding_pre = np.asarray(embedding_pre)
 print("begin to train...")
 model = Model(config, embedding_pre, dropout_keep=0.5)
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver = tf.train.Saver()
     train(model, sess, saver, epochs, batch_size, data_train, data_test, id2word, id2tag)
-
