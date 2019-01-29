@@ -1,10 +1,6 @@
-import codecs
-import re
-import numpy as np
-
-def calculate(x,y,id2word,id2tag,res=[]):
+def calculate(x, y, id2word, id2tag, res=[]):
     entity = []
-    for i in range(len(x)):
+    for i in range(len(x)): 
         for j in range(len(x[0])):
             if x[i][j] == 0 or y[i][j] == 0:
                 continue
@@ -22,7 +18,7 @@ def calculate(x,y,id2word,id2tag,res=[]):
                 entity = []
     return res
 
-def train(model,sess,saver,epochs,batch_size,data_train,data_test,id2word,id2tag):
+def train(model, sess, saver, epochs, batch_size, data_train, data_test, id2word, id2tag):
     batch_num = int(data_train.y.shape[0] / batch_size)
     batch_num_test = int(data_test.y.shape[0] / batch_size)
     for epoch in range(epochs):
